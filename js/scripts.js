@@ -1,14 +1,7 @@
-let myName = 'Bungulus';
-document.write(myName);
-myName = 'Schpeidermann';
-document.write(myName);
-//comment to see how the slashes work
+alert('what is up world?')
 
-let simpleAddition = 2+2;
-document.write (simpleAddition);
+let favoriteBand = 'The Beatles';
+document.write(favoriteBand);
 
-let size = 100;
-let doubleSize = size * 2;
-document.write(doubleSize);
-let minSize = (doubleSize * 2) - (size / 2);
-document.write(minSize);
+let currentCity = 'Berlin';
+document.write(currentCity);
