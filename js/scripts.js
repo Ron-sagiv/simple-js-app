@@ -7,7 +7,7 @@ let pokemonList = [{ name: 'Jigglypuff', types: ['Normal', 'Fairy'], height: 0.5
 ];
 
 //a loop to present the pokemons (name and height) in the website
-
+// and it highlights 1 pokemon that is tall
 
 
 let minHeightToTriggerText = 2;
