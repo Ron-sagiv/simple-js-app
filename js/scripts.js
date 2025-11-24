@@ -9,25 +9,28 @@ let pokemonList = [{ name: 'Jigglypuff', types: ['Normal', 'Fairy'], height: 0.5
 //a loop to present the pokemons (name and height) in the website
 // and it highlights 1 pokemon that is tall
 
+//code from previous task that needs to be replaced:
+// const minHeightToTriggerText = 2;
+// const bigText = 'That\'s a big one!'
+// let isBigTextPrinted = false;
 
-const minHeightToTriggerText = 2;
-const bigText = 'That\'s a big one!'
-let isBigTextPrinted = false;
+// for (i = 0; pokemonList[i];i++) {
 
-for (i = 0; pokemonList[i];i++) {
-
-    let text = '<p>' + pokemonList[i].name + ' (Height: ' + pokemonList[i].height + ')';
-    if (pokemonList[i].height >= minHeightToTriggerText && !isBigTextPrinted) {
-        text += ' - ' + bigText 
-         isBigTextPrinted = true
-    }
+//     let text = '<p>' + pokemonList[i].name + ' (Height: ' + pokemonList[i].height + ')';
+//     if (pokemonList[i].height >= minHeightToTriggerText && !isBigTextPrinted) {
+//         text += ' - ' + bigText 
+//          isBigTextPrinted = true
+//     }
 
 
-    text += '</p>';
-    document.write(text);
+//     text += '</p>';
+//     document.write(text);
     
-}
+// }
 
-
+//Using for.Each in order to present all pokemons with all of their characteristica
+pokemonList.forEach(function(pokemon) {
+  document.write(`${pokemon.name} (type: ${pokemon.types.join(', ')}, height: ${pokemon.height}, abilities: ${pokemon.abilities.join(', ')})<br>`);
+});
 
 
