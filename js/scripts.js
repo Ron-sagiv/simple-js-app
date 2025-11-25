@@ -41,10 +41,17 @@ function add(item){
   
   pokemonList.push(item);
 }
+// findByName function, using filter()
+  function findByName(name) {
+    return pokemonList.filter(function(pokemon) {
+      return pokemon.name === name;
+    });
+  }
 // 3 + 4: Return ONLY an object with matching key:value names
 return{
     getAll: getAll,
-    add:add
+    add:add,
+    findByName: findByName
 };
 
 })();// 1: This is the IIFE part
