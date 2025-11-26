@@ -47,17 +47,30 @@ function add(item){
       return pokemon.name === name;
     });
   }
+
+  //1.6 new code: addingg list item
+function addListItem(pokemon){
+let unorderedList = document.querySelector('.pokemon-list');
+  let listItem = document.createElement('li');
+  let button = document.createElement('button');
+  button.innerText = pokemon.name ;
+  button.classList.add('button1');
+  listItem.appendChild(button);
+  unorderedList.appendChild(listItem);
+}
+
 // 3 + 4: Return ONLY an object with matching key:value names
 return{
     getAll: getAll,
     add:add,
-    findByName: findByName
+    findByName: findByName,
+     addListItem: addListItem
 };
 
 })();// 1: This is the IIFE part
 
 pokemonRepository.getAll().forEach(function(pokemon){
-  document.write(`${pokemon.name} (type: ${pokemon.types.join(', ')}, height: ${pokemon.height}, abilities: ${pokemon.abilities.join(', ')}))<br>`);
+   pokemonRepository.addListItem(pokemon)
 
 });
 
