@@ -53,12 +53,34 @@ function addListItem(pokemon){
 let unorderedList = document.querySelector('.pokemon-list');
   let listItem = document.createElement('li');
   let button = document.createElement('button');
+ 
   button.innerText = pokemon.name ;
   button.classList.add('button1');
+ 
   listItem.appendChild(button);
   unorderedList.appendChild(listItem);
+
+   ////event listener 1.6.2.2
+   //REMOVED old inline event listener
+//   button.addEventListener('click', function () {
+//   showDetails(pokemon);
+// });
+//call the new event listener function
+  addButtonEventListener(button, pokemon);
+}
+// separate event listener handler
+function addButtonEventListener(button, pokemon) {   // ADDED
+  button.addEventListener('click', function () {    // MOVED HERE
+    showDetails(pokemon);                            
+  });
+
 }
 
+
+// 1.6.2 show details function
+function showDetails(pokemon){
+  console.log(pokemon);
+}
 // 3 + 4: Return ONLY an object with matching key:value names
 return{
     getAll: getAll,
