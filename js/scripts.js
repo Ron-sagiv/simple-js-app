@@ -23,8 +23,6 @@ const pokemonRepository = (function () {
     }
   }
 
-
-
   // Define functions separately using the function keyword
   function getAll() {
     return pokemonList;
@@ -53,6 +51,7 @@ const pokemonRepository = (function () {
 
     pokemonList.push(item);
   }
+
   // findByName function, using filter()
   function findByName(name) {
     return pokemonList.filter(function (pokemon) {
@@ -60,34 +59,31 @@ const pokemonRepository = (function () {
     });
   }
 
-  //1.6 new code: addingg list item
-  function addListItem(pokemon) {
-    let unorderedList = document.querySelector('.pokemon-list');
-    let listItem = document.createElement('li');
-    let button = document.createElement('button');
-
-    // capitalize the first letter of each name
-    button.innerText =
-      pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-
-    button.classList.add('button1');
-
-    listItem.appendChild(button);
-    unorderedList.appendChild(listItem);
-
-    ////event listener 1.6.2.2
-    //call the new event listener function
-    addButtonEventListener(button, pokemon);
-  }
   // separate event listener handler
-  function addButtonEventListener(button, pokemon) {   // ADDED
+  function handlePokemonBtnClick(button, pokemon) {   // ADDED
     button.addEventListener('click', function (event) {    // MOVED HERE
       showDetails(pokemon);
     });
-
   }
+
+  //1.6 new code: addingg list item
+  function addListItem(pokemon) {
+    let unorderedList = document.querySelector('.pokemon-list');
+    let pokemonListItem = document.createElement('li');
+    let pokemonBtn = document.createElement('button');
+
+    pokemonBtn.innerText = pokemon.name;
+
+    pokemonListItem.appendChild(pokemonBtn);
+    unorderedList.appendChild(pokemonListItem);
+
+    ////event listener 1.6.2.2
+    //call the new event listener function
+    handlePokemonBtnClick(pokemonBtn, pokemon);
+  }
+
   ////1.7 loadlist 
-  function loadList() {
+  async function loadList() {
     showLoadingMessage(); // 1.7 bunus show loading message
     return fetch(apiUrl).then(function (response) {
       return response.json();
@@ -100,7 +96,6 @@ const pokemonRepository = (function () {
         };
         add(pokemon);
         ///load all the list to console
-        console.log(pokemon);
       });
     }).catch(function (e) {
       hideLoadingMessage(); // 1.7 bonus
@@ -108,7 +103,7 @@ const pokemonRepository = (function () {
     })
   }
   ///1.7 load details"
-  function loadDetails(item) {
+  async function loadDetails(item) {
     showLoadingMessage(); // 1.7 bonus show load message
 
     let url = item.detailsUrl;
@@ -126,15 +121,9 @@ const pokemonRepository = (function () {
     });
   }
 
-
-  // 1.6.2 show details function
-  // function showDetails(pokemon){
-  //   console.log(pokemon);
-  // }
-
   // 1.7 show details function:
   function showDetails(item) {
-    pokemonRepository.loadDetails(item).then(function () {
+    loadDetails(item).then(function () {
       console.log(item);
     });
   }

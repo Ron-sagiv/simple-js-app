@@ -107,6 +107,7 @@ h1 {
   padding: 16px 20px;
   font-size: 1.1rem;
   font-weight: 600;
+  text-transform: capitalize;
   border: none;
   border-radius: 10px;
   background: #3658f2;
