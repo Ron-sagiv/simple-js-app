@@ -1,13 +1,15 @@
 
+// POKEMON REPOSITORY IIFE
+
+
 const pokemonRepository = (function () {
 
   let pokemonList = [];
   let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
-  //  required keys for validation
   const expectedKeys = ["name", "detailsUrl"];
 
-  // 1.7 bonus — loading message element
+  // Loading message
   function showLoadingMessage() {
     let loading = document.createElement('div');
     loading.classList.add('loading-message');
@@ -15,7 +17,6 @@ const pokemonRepository = (function () {
     document.body.appendChild(loading);
   }
 
-  // 1.7 bonus— remove loading message
   function hideLoadingMessage() {
     let loading = document.querySelector('.loading-message');
     if (loading) {
@@ -23,21 +24,17 @@ const pokemonRepository = (function () {
     }
   }
 
-  // Define functions separately using the function keyword
   function getAll() {
     return pokemonList;
   }
 
   function add(item) {
-    // validation — must be a real object
     if (typeof item !== "object" || item === null || Array.isArray(item)) {
       console.error("add() failed: item must be a non-null object.");
       return;
     }
 
-    //  validate keys
     const keys = Object.keys(item);
-
     const hasSameKeys =
       keys.length === expectedKeys.length &&
       keys.every(key => expectedKeys.includes(key));
@@ -52,21 +49,18 @@ const pokemonRepository = (function () {
     pokemonList.push(item);
   }
 
-  // findByName function, using filter()
   function findByName(name) {
     return pokemonList.filter(function (pokemon) {
       return pokemon.name === name;
     });
   }
 
-  // separate event listener handler
-  function handlePokemonBtnClick(button, pokemon) {   // ADDED
-    button.addEventListener('click', function (event) {    // MOVED HERE
+  function handlePokemonBtnClick(button, pokemon) {
+    button.addEventListener('click', function () {
       showDetails(pokemon);
     });
   }
 
-  //1.6 new code: addingg list item
   function addListItem(pokemon) {
     let unorderedList = document.querySelector('.pokemon-list');
     let pokemonListItem = document.createElement('li');
@@ -77,78 +71,137 @@ const pokemonRepository = (function () {
     pokemonListItem.appendChild(pokemonBtn);
     unorderedList.appendChild(pokemonListItem);
 
-    ////event listener 1.6.2.2
-    //call the new event listener function
     handlePokemonBtnClick(pokemonBtn, pokemon);
   }
 
-  ////1.7 loadlist 
   async function loadList() {
-    showLoadingMessage(); // 1.7 bunus show loading message
+    showLoadingMessage();
     return fetch(apiUrl).then(function (response) {
       return response.json();
     }).then(function (json) {
-      hideLoadingMessage(); // 1.7 bunus hide loading message
+      hideLoadingMessage();
       json.results.forEach(function (item) {
         let pokemon = {
           name: item.name,
           detailsUrl: item.url
         };
         add(pokemon);
-        ///load all the list to console
       });
     }).catch(function (e) {
-      hideLoadingMessage(); // 1.7 bonus
+      hideLoadingMessage();
       console.error(e);
     })
   }
-  ///1.7 load details"
+
   async function loadDetails(item) {
-    showLoadingMessage(); // 1.7 bonus show load message
+    showLoadingMessage();
 
     let url = item.detailsUrl;
     return fetch(url).then(function (response) {
       return response.json();
     }).then(function (details) {
-      hideLoadingMessage(); // 1.7 bonus hide load message
-      // Now we add the details to the item
+      hideLoadingMessage();
+
       item.imageUrl = details.sprites.front_default;
       item.height = details.height;
-      item.types = details.types;
+      item.types = details.types.map(t => t.type.name);
+
     }).catch(function (e) {
-      hideLoadingMessage(); // 1.7 bonus hide load message
+      hideLoadingMessage();
       console.error(e);
     });
   }
 
-  // 1.7 show details function:
+
+  // showDetails() — now opens MODAL instead of console.log()
+
+
   function showDetails(item) {
     loadDetails(item).then(function () {
-      console.log(item);
+
+
+      // build modal content
+      let modalTitle = item.name.toUpperCase();
+      let modalText = `
+        <strong>Height:</strong> ${item.height}<br>
+        <strong>Types:</strong> ${item.types.join(", ")}<br><br>
+        <img src="${item.imageUrl}" 
+             alt="${item.name}" 
+             style="width: 200px; max-width: 80%; display:block; margin:auto;" />
+      `;
+
+      // call global showModal()
+      window.showModal(modalTitle, modalText);
     });
   }
 
-  // 3 + 4: Return ONLY an object with matching key:value names
   return {
-    //1.7
     loadList: loadList,
-    //previous
     getAll: getAll,
     add: add,
     findByName: findByName,
     addListItem: addListItem,
-    //1.7
-
     loadDetails: loadDetails,
     showDetails: showDetails
   };
 
-})();//  This is the IIFE part
+})();
 
 pokemonRepository.loadList().then(function () {
   pokemonRepository.getAll().forEach(function (pokemon) {
-    pokemonRepository.addListItem(pokemon)
+    pokemonRepository.addListItem(pokemon);
+  });
+});
 
+
+
+// MODAL IIFE
+
+(function () {
+  let modalContainer = document.querySelector('#modal-container');
+
+  //  Expose showModal globally for showDetails()
+  window.showModal = function showModal(title, text) {
+    modalContainer.innerHTML = '';
+
+    let modal = document.createElement('div');
+    modal.classList.add('modal');
+
+    let closeButtonElement = document.createElement('button');
+    closeButtonElement.classList.add('modal-close');
+    closeButtonElement.innerText = 'Close';
+    closeButtonElement.addEventListener('click', hideModal);
+
+    let titleElement = document.createElement('h1');
+    titleElement.innerText = title;
+
+    let contentElement = document.createElement('p');
+    contentElement.innerHTML = text;
+
+    modal.appendChild(closeButtonElement);
+    modal.appendChild(titleElement);
+    modal.appendChild(contentElement);
+    modalContainer.appendChild(modal);
+
+    modalContainer.classList.add('is-visible');
+  };
+
+  function hideModal() {
+    modalContainer.classList.remove('is-visible');
+  }
+
+  // ESC closes modal
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')) {
+      hideModal();
+    }
   });
 
-});
+  // Clicking outside modal closes it
+  modalContainer.addEventListener('click', (e) => {
+    if (e.target === modalContainer) {
+      hideModal();
+    }
+  });
+
+})();
