@@ -1,7 +1,6 @@
 // POKEMON REPOSITORY IIFE
 const pokemonRepository = (function () {
   let pokemonList = [];
-  let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
   const expectedKeys = ['name', 'detailsUrl'];
 
@@ -40,6 +39,15 @@ const pokemonRepository = (function () {
   function handlePokemonBtnClick(button, pokemon) {
     button.addEventListener('click', function (e) {
       e.preventDefault();
+
+      /* add temporary “clicked” CSS class */
+      button.classList.add('clicked');
+
+      /* remove highlight when modal closes */
+      $('#pokemonModal').on('hidden.bs.modal', function () {
+        button.classList.remove('clicked');
+      });
+
       showDetails(pokemon);
     });
   }
@@ -47,22 +55,15 @@ const pokemonRepository = (function () {
   function addListItem(pokemon) {
     let ul = document.querySelector('.pokemon-list');
     let li = document.createElement('li');
-    li.classList.add('list-group-item');
+    li.classList.add('card', 'list-group-item');
 
-    let button = document.createElement('button');
-    button.innerText = pokemon.name;
-    button.classList.add('btn', 'btn-dark', 'btn-block'); /* for contrast */
-    button.setAttribute('data-toggle', 'modal');
-    button.setAttribute('data-target', '#pokemonModal');
-    button.setAttribute('aria-label', `Show details for ${pokemon.name}`);
-
-    li.appendChild(button);
+    li.innerText = pokemon.name;
     ul.appendChild(li);
 
-    handlePokemonBtnClick(button, pokemon);
+    handlePokemonBtnClick(li, pokemon);
   }
 
-  async function loadList() {
+  async function loadList(apiUrl) {
     showLoadingMessage();
     return fetch(apiUrl)
       .then((response) => response.json())
@@ -81,8 +82,9 @@ const pokemonRepository = (function () {
       .then((response) => response.json())
       .then((details) => {
         hideLoadingMessage();
-        item.imageUrl = details.sprites.front_default;
+        item.imageUrl = details.sprites.other.dream_world.front_default;
         item.height = details.height;
+        item.weight = details.weight;
         item.types = details.types.map((t) => t.type.name);
         // abilities rubric added
         item.abilities = details.abilities.map((a) => a.ability.name);
@@ -94,7 +96,8 @@ const pokemonRepository = (function () {
     loadDetails(item).then(function () {
       const modalTitle = item.name.toUpperCase();
       const modalBody = `
-        <p><strong>Height:</strong> ${item.height}</p>
+        <p><strong>Height:</strong> ${item.height}cm</p>
+        <p><strong>Weight:</strong> ${item.weight}g</p>
         <p><strong>Types:</strong> ${item.types.join(', ')}</p>
         <p><strong>Abilities:</strong> ${item.abilities.join(', ')}</p>
         <img src="${item.imageUrl}" alt="${item.name} artwork" />
@@ -123,10 +126,25 @@ const pokemonRepository = (function () {
   };
 })();
 
+let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=60';
+
 // Initialize Pokémon list
-pokemonRepository.loadList().then(function () {
+pokemonRepository.loadList(apiUrl).then(function () {
   pokemonRepository.getAll().forEach(function (pokemon) {
     pokemonRepository.addListItem(pokemon);
+  });
+});
+
+// Search logic
+const searchInpt = document.getElementById('searchinp');
+const pokemonList = document.querySelector('.pokemon-list');
+searchInpt.addEventListener('keyup', function (e) {
+  pokemonList.childNodes.forEach(function (n) {
+    if (n.innerText.includes(searchInpt.value)) {
+      n.style.display = 'block';
+    } else {
+      n.style.display = 'none';
+    }
   });
 });
 
