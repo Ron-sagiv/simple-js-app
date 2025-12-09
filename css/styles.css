@@ -9,10 +9,10 @@
 body {
   background: linear-gradient(135deg, #e1e8ff, #f0f4ff);
   min-height: 100vh;
-  padding-top: 70px;
+  /* padding-top: 70px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; */
 }
 
 /* Main container */
@@ -59,8 +59,15 @@ body {
 
 /* Bigger Pokémon image in modal */
 .modal-body img {
-  width: 300px !important;
-  max-width: 100%;
+  width: 250px !important;
+}
+
+.modal-body {
+  text-align: center !important;
+}
+
+.modal-content {
+  background: #e1e8ff !important;
 }
 
 /* Fade-in modal animation */
@@ -75,10 +82,20 @@ body {
   opacity: 1;
 }
 
+.pokemon-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .list-group-item {
   /* To look more smooth with rest of the page */
-  background-color: #e1e8ff !important;
+  background-color: #acbfff !important;
   border: none !important;
+  margin: 10px;
+  width: 150px;
+  text-align: center;
+  border-radius: 15px !important;
 }
 
 .navbar {
