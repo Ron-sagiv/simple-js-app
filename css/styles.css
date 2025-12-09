@@ -96,8 +96,20 @@ body {
   width: 150px;
   text-align: center;
   border-radius: 15px !important;
+  text-transform: capitalize;
+
+  /* smooth animation */
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* button-click visual effect */
+.list-group-item:active,               /* native click */
+.list-group-item.clicked {
+  /* JS-added class */
+  transform: scale(0.94) translateY(2px);
+  box-shadow: 0 4px 2px rgba(0, 0, 0, 0.15) inset;
+  background-color: #92a7ff !important;
+}
 .navbar {
   /* To look more smooth with rest of the page */
   background-color: #e1e8ff !important;
@@ -140,4 +152,8 @@ body {
 #backToTop.hide {
   opacity: 0;
   transform: scale(0.9);
+}
+/* correcting the shape of the last card */
+.list-group-flush .list-group-item:last-child {
+  margin-bottom: 10px !important;
 }

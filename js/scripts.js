@@ -39,6 +39,15 @@ const pokemonRepository = (function () {
   function handlePokemonBtnClick(button, pokemon) {
     button.addEventListener('click', function (e) {
       e.preventDefault();
+
+      /* add temporary “clicked” CSS class */
+      button.classList.add('clicked');
+
+      /* remove highlight when modal closes */
+      $('#pokemonModal').on('hidden.bs.modal', function () {
+        button.classList.remove('clicked');
+      });
+
       showDetails(pokemon);
     });
   }
@@ -48,14 +57,6 @@ const pokemonRepository = (function () {
     let li = document.createElement('li');
     li.classList.add('card', 'list-group-item');
 
-    // let button = document.createElement('button');
-    // button.innerText = pokemon.name;
-    // button.classList.add('btn', 'btn-dark', 'btn-block'); /* for contrast */
-    // button.setAttribute('data-toggle', 'modal');
-    // button.setAttribute('data-target', '#pokemonModal');
-    // button.setAttribute('aria-label', `Show details for ${pokemon.name}`);
-
-    // li.appendChild(button);
     li.innerText = pokemon.name;
     ul.appendChild(li);
 
