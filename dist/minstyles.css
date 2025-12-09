@@ -1,17 +1,17 @@
-/* GLOBAL RESET */
+#backToTop,
+.btn-dark {
+  color: #fff !important;
+}
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
 }
-
 body {
   background: linear-gradient(135deg, #e1e8ff, #f0f4ff);
   min-height: 100vh;
 }
-
-/* Main container */
 .main-container {
   background: #e1e8ff;
   width: 100%;
@@ -20,9 +20,12 @@ body {
   border-radius: 18px;
   margin-top: 60px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  animation: fadeIn 0.7s ease;
+  animation: 0.7s fadeIn;
 }
-
+.btn-dark,
+.btn-secondary {
+  background-color: #194169 !important;
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -32,7 +35,6 @@ body {
     opacity: 1;
   }
 }
-
 .logo {
   height: 50px;
   transition: 0.25s;
@@ -40,52 +42,34 @@ body {
 .logo:hover {
   transform: scale(1.06);
 }
-
-/* Better-contrast buttons */
 .btn-dark {
-  background-color: #194169 !important; /* modified for contrast */
-  color: #ffffff !important;
   text-transform: capitalize;
   border-radius: 50%;
 }
-
-.btn-secondary {
-  background-color: #194169 !important; /* modified for contrast */
-}
-
-/* Bigger Pokémon image in modal */
 .modal-body img {
   width: 250px !important;
 }
-
 .modal-body {
   text-align: center !important;
 }
-
 .modal-content {
   background: #e1e8ff !important;
 }
-
-/* Fade-in modal animation */
 .modal-fade .modal-dialog {
   transform: translateY(-20px);
   opacity: 0;
   transition: 0.35s ease-in-out;
 }
-
 .modal.show .modal-dialog {
   transform: translateY(0);
   opacity: 1;
 }
-
 .pokemon-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
-
 .list-group-item {
-  /* To look more smooth with rest of the page */
   background-color: #acbfff !important;
   border: none !important;
   margin: 10px;
@@ -93,63 +77,47 @@ body {
   text-align: center;
   border-radius: 15px !important;
   text-transform: capitalize;
-
-  /* smooth animation */
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
-
-/* button-click visual effect */
-.list-group-item:active,               /* native click */
-.list-group-item.clicked {
-  /* JS-added class */
+.list-group-item.clicked,
+.list-group-item:active {
   transform: scale(0.94) translateY(2px);
   box-shadow: 0 4px 2px rgba(0, 0, 0, 0.15) inset;
   background-color: #92a7ff !important;
 }
 .navbar {
-  /* To look more smooth with rest of the page */
   background-color: #e1e8ff !important;
 }
-
-/*  BACK TO TOP BUTTON  */
 #backToTop {
   position: fixed;
   bottom: 25px;
   right: 25px;
   z-index: 2000;
-  display: none; /* Hidden by default */
+  display: none;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 700;
   padding: 0;
   line-height: 1;
   justify-content: center;
   align-items: center;
   display: flex;
-
-  /* Improved contrast color */
-  background-color: #0047b3 !important; /* Darker blue than #007bff */
-  color: white !important;
+  background-color: #0047b3 !important;
   border: none;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-
-  transition: opacity 0.3s ease, transform 0.25s ease;
+  transition: opacity 0.3s, transform 0.25s;
 }
-
-/* Fade-in animation when appearing */
 #backToTop.show {
   display: flex;
   opacity: 1;
   transform: scale(1);
 }
-
 #backToTop.hide {
   opacity: 0;
   transform: scale(0.9);
 }
-/* correcting the shape of the last card */
 .list-group-flush .list-group-item:last-child {
   margin-bottom: 10px !important;
 }
