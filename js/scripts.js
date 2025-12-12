@@ -1,24 +1,43 @@
 // POKEMON REPOSITORY IIFE
 const pokemonRepository = (function () {
   let pokemonList = [];
+  let prevUrl = null;
+  let nextUrl = null;
 
   const expectedKeys = ['name', 'detailsUrl'];
 
   function showLoadingMessage() {
     let loading = document.createElement('div');
-    loading.classList.add('loading-message');
-    loading.innerText = 'Loading...';
+    loading.classList.add('spinner', 'spinner-grow', 'text-danger');
+    // loading.innerText = 'Loading...';
     loading.setAttribute('aria-live', 'polite');
     document.body.appendChild(loading);
   }
 
   function hideLoadingMessage() {
-    let loading = document.querySelector('.loading-message');
+    let loading = document.querySelector('.spinner');
     if (loading) loading.remove();
   }
 
   function getAll() {
     return pokemonList;
+  }
+
+  function clearAll() {
+    // Clear data
+    pokemonList.length = 0;
+
+    // Clear UI
+    let ul = document.querySelector('.pokemon-list');
+    ul.innerHTML = '';
+  }
+
+  function getPrevUrl() {
+    return prevUrl;
+  }
+
+  function getNextUrl() {
+    return nextUrl;
   }
 
   function add(item) {
@@ -69,6 +88,8 @@ const pokemonRepository = (function () {
       .then((response) => response.json())
       .then((json) => {
         hideLoadingMessage();
+        prevUrl = json.previous;
+        nextUrl = json.next;
         json.results.forEach((item) =>
           add({ name: item.name, detailsUrl: item.url })
         );
@@ -123,16 +144,44 @@ const pokemonRepository = (function () {
     addListItem,
     loadDetails,
     showDetails,
+    getPrevUrl,
+    getNextUrl,
+    clearAll,
   };
 })();
 
 let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=60';
+const prevBtn = document.querySelector('.prev-btn');
+const nextBtn = document.querySelector('.next-btn');
+
+function loadPokemons(apiURL) {
+  pokemonRepository.clearAll();
+  pokemonRepository.loadList(apiURL).then(function () {
+    pokemonRepository.getAll().forEach(function (pokemon) {
+      pokemonRepository.addListItem(pokemon);
+    });
+
+    // show & hide pagination buttons
+    pokemonRepository.getPrevUrl() == null
+      ? prevBtn.classList.add('hide')
+      : prevBtn.classList.remove('hide');
+    pokemonRepository.getNextUrl() == null
+      ? nextBtn.classList.add('hide')
+      : nextBtn.classList.remove('hide');
+  });
+}
 
 // Initialize Pokémon list
-pokemonRepository.loadList(apiUrl).then(function () {
-  pokemonRepository.getAll().forEach(function (pokemon) {
-    pokemonRepository.addListItem(pokemon);
-  });
+loadPokemons(apiUrl);
+
+// Pagination
+prevBtn.addEventListener('click', function () {
+  const prevURL = pokemonRepository.getPrevUrl();
+  prevURL && loadPokemons(prevURL);
+});
+nextBtn.addEventListener('click', function () {
+  const nextURL = pokemonRepository.getNextUrl();
+  nextURL && loadPokemons(nextURL);
 });
 
 // Search logic
@@ -140,7 +189,7 @@ const searchInpt = document.getElementById('searchinp');
 const pokemonList = document.querySelector('.pokemon-list');
 searchInpt.addEventListener('keyup', function (e) {
   pokemonList.childNodes.forEach(function (n) {
-    if (n.innerText.includes(searchInpt.value)) {
+    if (n.innerText.toLowerCase().includes(searchInpt.value.toLowerCase())) {
       n.style.display = 'block';
     } else {
       n.style.display = 'none';
